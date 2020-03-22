@@ -13,6 +13,45 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+/**
+ * 高版本kafka streams的写法
+ * 赏析Kafka Streams程序的优雅关闭
+ * https://blog.csdn.net/lzufeng/article/details/81319365
+ *
+ *
+ * RocksDB保存本地状态
+ * @formatter:off
+ * "StreamThread-1@1646" prio=5 tid=0xd nid=NA runnable
+ *   java.lang.Thread.State: RUNNABLE
+ * 	  at org.rocksdb.RocksDB.open(RocksDB.java:231)
+ * 	  at org.apache.kafka.streams.state.internals.RocksDBStore.openDB(RocksDBStore.java:179)
+ * 	  at org.apache.kafka.streams.state.internals.RocksDBStore.openDB(RocksDBStore.java:156)
+ * 	  at org.apache.kafka.streams.state.internals.RocksDBStore.init(RocksDBStore.java:161)
+ * 	  at org.apache.kafka.streams.state.internals.ChangeLoggingKeyValueBytesStore.init(ChangeLoggingKeyValueBytesStore.java:40)
+ * 	  at org.apache.kafka.streams.state.internals.MeteredKeyValueStore$7.run(MeteredKeyValueStore.java:100)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamsMetricsImpl.measureLatencyNs(StreamsMetricsImpl.java:188)
+ * 	  at org.apache.kafka.streams.state.internals.MeteredKeyValueStore.init(MeteredKeyValueStore.java:131)
+ * 	  at org.apache.kafka.streams.state.internals.CachingKeyValueStore.init(CachingKeyValueStore.java:63)
+ * 	  at org.apache.kafka.streams.processor.internals.AbstractTask.initializeStateStores(AbstractTask.java:85)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamTask.<init>(StreamTask.java:142)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamThread.createStreamTask(StreamThread.java:903)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamThread$TaskCreator.createTask(StreamThread.java:1280)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamThread$AbstractTaskCreator.retryWithBackoff(StreamThread.java:1252)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamThread.addStreamTasks(StreamThread.java:1008)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamThread.access$500(StreamThread.java:69)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamThread$1.onPartitionsAssigned(StreamThread.java:267)
+ * 	  at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.onJoinComplete(ConsumerCoordinator.java:261)
+ * 	  at org.apache.kafka.clients.consumer.internals.AbstractCoordinator.joinGroupIfNeeded(AbstractCoordinator.java:355)
+ * 	  at org.apache.kafka.clients.consumer.internals.AbstractCoordinator.ensureActiveGroup(AbstractCoordinator.java:306)
+ * 	  at org.apache.kafka.clients.consumer.internals.ConsumerCoordinator.poll(ConsumerCoordinator.java:292)
+ * 	  at org.apache.kafka.clients.consumer.KafkaConsumer.pollOnce(KafkaConsumer.java:1030)
+ * 	  at org.apache.kafka.clients.consumer.KafkaConsumer.poll(KafkaConsumer.java:996)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamThread.runLoop(StreamThread.java:629)
+ * 	  at org.apache.kafka.streams.processor.internals.StreamThread.run(StreamThread.java:395)
+ *
+ * @formatter:on
+ */
+
 public class WordCountExample {
 
     public static void main(String[] args) throws Exception{
@@ -57,7 +96,7 @@ public class WordCountExample {
 
         // usually the stream application would be running forever,
         // in this example we just let it run for some time and stop since the input data is finite.
-        Thread.sleep(2_000L);
+        Thread.sleep(1_000L);
 
         streams.close();
 
