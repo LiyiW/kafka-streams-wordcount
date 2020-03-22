@@ -1,7 +1,6 @@
 package com.shapira.examples.streams.wordcount;
 
 
-import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
@@ -36,6 +35,7 @@ public class WordCountExample {
 
         KStreamBuilder builder = new KStreamBuilder();
 
+        // input topic
         KStream<String, String> source = builder.stream("wordcount-input");
 
 
@@ -45,6 +45,7 @@ public class WordCountExample {
                 .filter((key, value) -> (!value.equals("the")))
                 .groupByKey()
                 .count("CountStore").mapValues(value->Long.toString(value)).toStream();
+        // output topic
         counts.to("wordcount-output");
 
         KafkaStreams streams = new KafkaStreams(builder, props);
@@ -56,7 +57,7 @@ public class WordCountExample {
 
         // usually the stream application would be running forever,
         // in this example we just let it run for some time and stop since the input data is finite.
-        Thread.sleep(5000L);
+        Thread.sleep(2_000L);
 
         streams.close();
 
