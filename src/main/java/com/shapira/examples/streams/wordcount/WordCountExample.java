@@ -96,9 +96,10 @@ public class WordCountExample {
 
         // usually the stream application would be running forever,
         // in this example we just let it run for some time and stop since the input data is finite.
-        Thread.sleep(1_000L);
+//        Thread.sleep(1_000L);
+//        streams.close();
 
-        streams.close();
+        Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 
     }
 }
