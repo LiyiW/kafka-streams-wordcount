@@ -50,6 +50,9 @@ import java.util.regex.Pattern;
  * 	  at org.apache.kafka.streams.processor.internals.StreamThread.run(StreamThread.java:395)
  *
  * @formatter:on
+ *
+ * 如果多个流处理application instance怎么设计？
+ * 加一个application，把单词按hash值发向不同partition？ 比如把map中key设置为hashcode，然后groupByKey，再把value合并发出去
  */
 
 public class WordCountExample {
